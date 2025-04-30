@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcp-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gcp-deploy
+  template:
+    metadata:
+      labels:
+        app: gcp-deploy
+    spec:
+      containers:
+        - name: gcp
+          image: rxnjitth/gcp:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gcp-lb
+spec:
+  selector:
+    app: gcp-deploy
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
